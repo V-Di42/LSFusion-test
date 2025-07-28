@@ -4,19 +4,17 @@ CLASS Teacher 'Учитель';
 
 fullName 'ФИО' = DATA STRING[50](Teacher) NONULL;
 canTeach 'Преподает' (Teacher, Subject) = DATA BOOLEAN(Teacher, Subject);
-isHomeroom 'Классный руководитель' = DATA BOOLEAN(Teacher);
 
 FORM teacherList 'Список учителей'
     OBJECTS t = Teacher
-    PROPERTIES(t) READONLY fullName, isHomeroom
+    PROPERTIES(t) READONLY fullName
     PROPERTIES(t) NEWSESSION NEW, EDIT, DELETE
     LIST Teacher OBJECT t
-    USERFILTERS isHomeroom(t)
 ;
 
 FORM teacherEdit 'Редактировать учителя'
     OBJECTS t = Teacher PANEL
-    PROPERTIES(t) fullName, isHomeroom
+    PROPERTIES(t) fullName
     OBJECTS subjects = Subject GRID
     PROPERTIES(subjects) name
     PROPERTIES(t, subjects) canTeach

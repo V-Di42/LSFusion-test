@@ -20,21 +20,24 @@ FORM studentEdit 'Редактировать ученика'
     EDIT Student OBJECT s
 ;
 
-FORM classFull 'Класс (полная)'
-    OBJECTS c = Class PANEL
-    PROPERTIES(c)
-    number, letter, profileName, teacherName, studentsCount
-    OBJECTS st = Student
-    PROPERTIES(st) numInClass, fullName
-    FILTERS class(st) = c
-    PROPERTIES(st) NEWSESSION NEW, DELETE
-    EDIT Class OBJECT c
+EXTEND FORM classEdit
+   OBJECTS st = Student
+   PROPERTIES(st) numInClass, fullName
+   FILTERS class(st) = c
+   PROPERTIES(st) NEWSESSION NEW, DELETE
+   EDIT Class OBJECT c
 ;
+
+EXTEND FORM classList
+    OBJECTS cl = Class
+    PROPERTIES(cl) READONLY fullName, profileName, teacherName, studentsCount
+    ;
+
+    
 
 NAVIGATOR {
     NEW FOLDER studentFolder 'Ученики' FIRST WINDOW toolbar {
         NEW studentList;
         NEW studentEdit;
-        NEW classFull;
     }
-}
+} 

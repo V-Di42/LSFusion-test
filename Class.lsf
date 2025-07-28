@@ -9,6 +9,7 @@ profile 'Профиль' = DATA Subject(Class);
 CONSTRAINT profile(Class c) AND NOT isProfile(profile(c))
     CHECKED BY profile
     MESSAGE 'Профиль должен быть профильным предметом';
+isHomeroom 'Классный руководитель' = DATA BOOLEAN(Teacher);
 homeroomTeacher 'Классный руководитель' = DATA Teacher(Class);
 
 profileName 'Профиль (наименование)' (Class c) = name(profile(c));
@@ -25,6 +26,15 @@ FORM classEdit 'Редактировать класс'
     OBJECTS c = Class PANEL
     PROPERTIES(c) number, letter, profileName, homeroomTeacher
     EDIT Class OBJECT c
+;
+ EXTEND FORM teacherList
+    PROPERTIES(t) READONLY isHomeroom
+     USERFILTERS isHomeroom(t)
+ ;
+
+EXTEND FORM teacherEdit
+    PROPERTIES(t) isHomeroom
+    EDIT Teacher OBJECT t
 ;
 
 NAVIGATOR {
