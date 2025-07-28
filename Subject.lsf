@@ -1,0 +1,25 @@
+MODULE Subject;
+CLASS Subject 'Предмет';
+
+name 'Предмет' = DATA STRING[25](Subject) NONULL;
+isProfile 'Профильный' = DATA BOOLEAN(Subject);
+
+FORM subjectList 'Список предметов'
+    OBJECTS s = Subject
+    PROPERTIES(s) READONLY name, isProfile
+    PROPERTIES(s) NEWSESSION NEW, EDIT, DELETE
+    LIST Subject OBJECT s
+;
+
+FORM subjectEdit 'Редактировать предмет'
+    OBJECTS s = Subject PANEL
+    PROPERTIES(s) name, isProfile
+    EDIT Subject OBJECT s
+;
+
+NAVIGATOR {
+    NEW FOLDER subjectFolder 'Предметы' FIRST WINDOW toolbar {
+        NEW subjectList;
+        NEW subjectEdit;
+    }
+}

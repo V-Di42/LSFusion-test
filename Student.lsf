@@ -1,0 +1,40 @@
+MODULE Student;
+REQUIRE Class;
+CLASS Student 'Ученик';
+
+class 'Класс' = DATA Class(Student);
+numInClass '№ п/п' (Student s) = PARTITION SUM 1 ORDER s BY class(s);
+fullName 'ФИО' = DATA STRING[50](Student) NONULL;
+studentsCount 'Количество учеников' (Class c) = GROUP SUM 1 BY class(Student s);
+
+FORM studentList 'Список учеников'
+    OBJECTS s = Student
+    PROPERTIES(s) numInClass, fullName
+    PROPERTIES(s) NEWSESSION NEW, EDIT, DELETE
+    LIST Student OBJECT s
+;
+
+FORM studentEdit 'Редактировать ученика'
+    OBJECTS s = Student PANEL
+    PROPERTIES(s) class, numInClass, fullName
+    EDIT Student OBJECT s
+;
+
+FORM classFull 'Класс (полная)'
+    OBJECTS c = Class PANEL
+    PROPERTIES(c)
+    number, letter, profileName, teacherName, studentsCount
+    OBJECTS st = Student
+    PROPERTIES(st) numInClass, fullName
+    FILTERS class(st) = c
+    PROPERTIES(st) NEWSESSION NEW, DELETE
+    EDIT Class OBJECT c
+;
+
+NAVIGATOR {
+    NEW FOLDER studentFolder 'Ученики' FIRST WINDOW toolbar {
+        NEW studentList;
+        NEW studentEdit;
+        NEW classFull;
+    }
+}

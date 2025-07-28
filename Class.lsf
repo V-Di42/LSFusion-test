@@ -1,0 +1,35 @@
+MODULE Class;
+REQUIRE Teacher, Subject;
+CLASS Class 'Класс';
+
+number 'Номер' = DATA INTEGER(Class);
+letter 'Буква' = DATA STRING[1](Class);
+fullName 'Название класса' (Class c) = number(c) + letter(c);
+profile 'Профиль' = DATA Subject(Class);
+CONSTRAINT profile(Class c) AND NOT isProfile(profile(c))
+    CHECKED BY profile
+    MESSAGE 'Профиль должен быть профильным предметом';
+homeroomTeacher 'Классный руководитель' = DATA Teacher(Class);
+
+profileName 'Профиль (наименование)' (Class c) = name(profile(c));
+teacherName 'Руководитель (ФИО)' (Class c) = fullName(homeroomTeacher(c));
+
+FORM classList 'Список классов'
+    OBJECTS c = Class
+    PROPERTIES(c) READONLY fullName, profileName, teacherName
+    PROPERTIES(c) NEWSESSION NEW, EDIT, DELETE
+    LIST Class OBJECT c
+;
+
+FORM classEdit 'Редактировать класс'
+    OBJECTS c = Class PANEL
+    PROPERTIES(c) number, letter, profileName, homeroomTeacher
+    EDIT Class OBJECT c
+;
+
+NAVIGATOR {
+    NEW FOLDER classFolder 'Классы' FIRST WINDOW toolbar {
+        NEW classList;
+        NEW classEdit;
+    }
+}
